@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<body>
+<ng-container>
+	<div ng-app="eBay" ng-controller="myCtrl">
+		<b>Total items: {{totalItems}}</b>
+		<br>
+		<button ng-click="run(false)">Check</button>
+		<button ng-click="run(true)">Revise</button>
+		<table class="table">
+			<tr>
+				<th>{{month}}</th>
+				<th>{{year}}</th>
+				<th>{{numberOfItems}}</th>
+				<th>{{numberOfWarnings}}</th>
+				<th>{{numberOfErrors}}</th>
+			</tr>
+			<tr>
+				<th>Month</th>
+				<th>Year</th>
+				<th>Items</th>
+				<th>Warning</th>
+				<th>Error</th>
+			</tr>
+			<tr ng-repeat = "res in result">
+				<th>{{res.month}}</th>
+				<th>{{res.year}}</th>
+				<th>{{res.numberOfItems}}</th>
+				<th>{{res.numberOfWarnings}}</th>
+				<th>{{res.numberOfErrors}}</th>
+			</tr>
+		</table>
+		<div id="descList"></div>
+	</div>
+	</ng-container>
+</body>
+
+<script>
+	var app = angular.module("eBay", []); 
+	app.controller("myCtrl", function($scope, $http) {
+		appId = 'PhinkNg-EbayChan-PRD-b08fef0ab-ae0ce710';
+		token = 'v^1.1#i^1#I^3#r^0#f^0#p^3#t^H4sIAAAAAAAAAOVXa2wUVRTu9oVQKGpIq4SSZagxFGb33pl9zEzaNUsfaQ0tK1uQd53Hne3A7Mxm5u62K1SaGptoNIB/NDHGmkhATFR+gCgaID54aDTRiAZjjIgRCZSYoJgI6p1tu2zXCLRLYhP3x07m3PP6zvnumXtBf/n0usHWwSuzXNOKh/pBf7HLBSvA9PKyxZUlxXPLikCOgmuov7a/dKDkXL0txvWEsALZCdOwkbs3rhu2kBE2UEnLEEzR1mzBEOPIFrAsRMPtywTGA4SEZWJTNnXK3dbUQPGqwgcCEuBViQEIQSI1xnx2mmRdYiQuyAQgVAJBCCWybttJ1GbYWDRwA8UAyNGAoSHbCfwCwws+6GF5/1rKvQpZtmYaRMUDqFAmXSFja+XkeuNURdtGFiZOqFBbuCW6PNzW1NzRWe/N8RUarUMUizhpj39rNBXkXiXqSXTjMHZGW4gmZRnZNuUNjUQY71QIjyUzifQzpQ74RJYN+oPkyclcgL8tpWwxrbiIb5yHI9EUWs2oCsjAGk7frKKkGtImJOPRtw7ioq3J7TweSoq6pmrIaqCal4bXrIw2r6Dc0UjEMlOaghQHKQR8EHIBCEi2iW7N2Gx6MJK7DVM3Y2kCE44GHPE6Wu68iI2moWhO8Wx3h4mXIpI9yq8RzKkRUVpuLLfCKnYyy9ULjtWS49Y6zR3pZhJ3G05/UZwUxJ15vXknxqhxnQy3jRyIkaHMSxCyAVUFcpYczl4vgCAhp0fhSMTr5IIkMU3HRWszwgldlBEtk/Im48jSFIH1qwzLqYhWArxK+3hVpSW/EqChihAZDJIk89z/kScYW5qUxCjLlfyFDNgGKiqbCRQxdU1OU/kqmRk0yoxeu4HqxjgheL09PT2eHtZjWjEvAwD0rm5fFpW7UVyksrrazZVpLUNbGRErWxNwOkGy6SUUJMGNGBViLSUiWjgdRbpOBGMEHpdbKF/6LyBtB+TUgufY28SBmNA8Dr89shn3miLZz46oK5Ox+1aUvDYpkGdkdxDPHguJimno6ckYT8BGM1KEVKaVJgGdvT7hoFkHE7ARZdlMGngyGEdNJ2ChJnVV03Vn70wmYI75RNI0RD2NNdnOhiyI+OFEok2ZWsSPOAOzI0Y3kzo0dosGHVnRREuAjHAViBItIiCjIAQFwVZQSpNRlzbFoBtJXS8IVxNK/dftJHs9nI8ryKmiD/IM7eNYQPuC5I9HiKVZnx8GWFWWGVRYP9tjU62VEAI/y5CDAAcAUxC2Rl0jI6IzPdU+UK2mjZFSGDRyUpxaoJxZMzZqfLICaR5KhLYyx9GiorJ00A/YW4WcJ8g5aP3jrO0df+kNFWV+cMC1Hwy49pF7M/CC++BCsKC8ZGVpycy5toaRRxNVj63FDHKXs5BnM0onRM0qLnetm/fmq1051+yhDeCe7EV7egmsyLl1g3nXV8rg7OpZkAMMZIGf4X1wLVh4fbUUVpXOiX5w5+t7W2ovL/jkJFjVt0dIp7YNg1lZJZerrKh0wFUUOl3V27Hf1fXiUOjQzF70AvVH39FeenDHjvPvpFvxlWv7friaetmN1s/e8Ypbf//Qlr0nr205dOJMzedM5cH03hnbTw5Xp35Z99LGs1uvDdEp+diDfY90nKofbqpvid89eOm1osORJcavMfVI44VNf7bWFu86+HPdmR+PP33gicup767W1Ry4nJxx7Jv5d/2+66OPy9Y/fKCm6vmm8kXvbnhgd99j31aefu+p2mf1C89stWd4rXVfPlmx8eieLz47XP3T40vmwNTF477753+1/cPK1Lbdiy6+8dxbpRvjNWsqv77w6ZXEzu8X15VfWn1ksOqvwJLYvczb50+d2zOtqws9eiJykW1v+e2O1oqzx4arN42072+D/e0HABEAAA==';
+		$http.defaults.headers.common['X-EBAY-API-SITEID'] = '15';
+		$http.defaults.headers.common['X-EBAY-API-REQUEST-ENCODING'] = 'XML';
+		$http.defaults.headers.common['X-EBAY-API-COMPATIBILITY-LEVEL'] = '967';
+		$http.defaults.headers.common['X-EBAY-API-IAF-TOKEN'] = token;
+		
+		parser = new DOMParser();
+		$scope.totalItems = 0;
+		$scope.result = [];
+		$scope.revise = false;
+		const FROM_MONTH = 12;
+		const FROM_YEAR = 2017;
+		const TO_MONTH = 3;
+		const TO_YEAR = 2018;
+		
+		month2Text = function (month) {
+			if (month < 10)
+				return "0" + month;
+			else
+				return month;
+		}
+		
+		$scope.run = function (revise) {
+			$scope.month = FROM_MONTH;
+			$scope.year = FROM_YEAR;
+			$scope.revise = revise
+			nextMonth();
+			//requestReviseItem("321234518050", "");
+		};
+		
+		nextMonth = function () {
+			if (($scope.year == TO_YEAR) && ($scope.month == TO_MONTH))  {
+				console.log("FINISHED ALL JOB");
+				return;
+			} 
+			if ($scope.month < 12) {
+				$scope.month++;
+			} else {
+				$scope.month = 1;
+				$scope.year++;
+			}
+			
+			// '2017-03-01T06:38:48.420Z'	
+			sample = "-01T06:38:48.420Z";
+			console.log("RUNNING " + month2Text($scope.month) + "/" + $scope.year);
+			$scope.numberOfItems = 0;
+			$scope.numberOfWarnings = 0;
+			$scope.numberOfErrors = 0;
+			if ($scope.month < 12) {
+				requestSellerList($scope.year + '-' + month2Text($scope.month) + sample, $scope.year + '-' + month2Text($scope.month + 1) + sample, 1);
+			} else {
+				requestSellerList($scope.year + '-12' + sample, ($scope.year + 1) + '-01'  + sample, 1);
+			}
+		}
+		
+		requestSellerList = function (dateFrom, dateTo, pageNumber) {
+			console.log("BEGIN\ndateFrom: " + dateFrom + "\ndateTo: " + dateTo + "\npageNumber: " + pageNumber);
+			$http.defaults.headers.common['X-EBAY-API-CALL-NAME'] = 'GetSellerList';
+			url = 'https://api.ebay.com/ws/api.dll';
+			data = requestSellerListBuilder(dateFrom, dateTo, pageNumber);
+			$http.post(url, data).then(function(res) {
+				//console.log(res);
+				descList = document.getElementById("descList");
+				xml = parser.parseFromString(res.data, "application/xml").childNodes[0];
+				items = xml.getElementsByTagName("Item");
+				$scope.totalItems += items.length;
+				$scope.numberOfItems += items.length;	
+				
+				for (var i=0; i < items.length; i++) {
+					item = items[i];
+					desc = item.getElementsByTagName("Description")[0].childNodes[0].nodeValue;
+					id = item.getElementsByTagName("ItemID")[0].childNodes[0].nodeValue;
+					price = item.getElementsByTagName("CurrentPrice")[0].childNodes[0].nodeValue;
+					modifiedDesc = addNoSelected(desc);
+					
+					if ($scope.revise) {
+						requestReviseItem(id, modifiedDesc);
+					} 
+					else {
+						descEle = document.createElement("p");
+						descEle.innerHTML = modifiedDesc;
+						idEle = document.createElement("h1");
+						idEle.appendChild(document.createTextNode(id + "     " + price));
+						descList.appendChild(idEle);
+						descList.appendChild(descEle);
+					}
+					
+					//requestReviseItem(id, trimmedDesc);
+				}
+				
+				hasMoreItems = xml.getElementsByTagName("HasMoreItems");
+				if (hasMoreItems.length > 0) {
+					//console.log("hasMoreItems", hasMoreItems[0].childNodes[0].nodeValue);
+					if (hasMoreItems[0].childNodes[0].nodeValue == "true") {
+						requestSellerList(dateFrom, dateTo, pageNumber + 1);
+					}
+					else {
+						console.log("FINISHED");
+						$scope.result.push({
+							month: $scope.month, 
+							year: $scope.year, 
+							numberOfItems: $scope.numberOfItems,
+							numberOfWarnings: $scope.numberOfWarnings,
+							numberOfErrors: $scope.numberOfErrors});
+						nextMonth();
+					}
+				}
+				else {
+					console.log("FINISHED");
+					$scope.result.push({
+						month: $scope.month, 
+						year: $scope.year, 
+						numberOfItems: $scope.numberOfItems,
+						numberOfWarnings: $scope.numberOfWarnings,
+						numberOfErrors: $scope.numberOfErrors});
+					nextMonth();
+				}
+			}, function (error) {
+				console.log(error);
+			});
+		}
+		
+		requestReviseItem = function (itemNumber, description) {
+			$http.defaults.headers.common['X-EBAY-API-CALL-NAME'] = 'ReviseItem';
+			url = 'https://api.ebay.com/ws/api.dll';
+			data = requestReviseItemBuilder(itemNumber, description);
+			$http.post(url, data).then(function(res) {
+				xml = parser.parseFromString(res.data, "application/xml").childNodes[0];
+				ack = xml.getElementsByTagName("Ack");
+				msg = ack[0].childNodes[0].nodeValue;
+				if (msg == "Warning") {
+					$scope.numberOfWarnings++;
+					//console.log(res);
+				} else if (msg == "Error") {
+					$scope.numberOfErrors++;
+					console.log(res);
+				}
+				//console.log(res);
+			}, function (error) {
+				console.log(error);
+			});
+		};
+		
+		requestSellerListBuilder = function (dateFrom, dateTo, pageNumber) {
+			request = "<?xml version='1.0' encoding='utf-8'?>" + "\n"
+					+ "<GetSellerListRequest xmlns='urn:ebay:apis:eBLBaseComponents'>" + "\n"
+					+ "<ErrorLanguage>en_US</ErrorLanguage>" + "\n"
+					+ "		<WarningLevel>High</WarningLevel>" + "\n"
+					+ "	  <DetailLevel>ItemReturnDescription</DetailLevel>" + "\n"
+					+ "	  <StartTimeFrom>" + dateFrom + "</StartTimeFrom>" + "\n"
+					+ "	  <StartTimeTo>" + dateTo + "</StartTimeTo>" + "\n"
+					+ "	  <Pagination>" + "\n"
+					+ "		<EntriesPerPage>40</EntriesPerPage>" + "\n"
+					+ "		<PageNumber>" + pageNumber + "</PageNumber>" + "\n"
+					+ "	  </Pagination>" + "\n"
+					+ "	 <OutputSelector>HasMoreItems</OutputSelector>" + "\n"
+					+ "  <OutputSelector>ItemId</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>Description</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>PictureURL</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>SellingStatus</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>ReturnedItemCountActual</OutputSelector>" + "\n"
+					+ "	</GetSellerListRequest>";
+			return request;
+		}
+		
+		requestReviseItemBuilder = function (itemNumber, description) {
+			request = "<?xml version='1.0' encoding='utf-8'?>" + "\n"
+					+ "<ReviseItemRequest xmlns='urn:ebay:apis:eBLBaseComponents'>" + "\n" 
+					+ "<ErrorLanguage>en_US</ErrorLanguage>" + "\n"
+					+ "		<WarningLevel>High</WarningLevel>" + "\n"
+					+ "	  <Item>" + "\n"
+					+ "		<ItemID>" + itemNumber + "</ItemID>" + "\n"
+					+ "		<Description><![CDATA[" + description + "]]></Description>" + "\n"
+					+ "		<DescriptionReviseMode>Replace</DescriptionReviseMode>" + "\n"
+					+ "	  </Item>" + "\n"
+					+ "	</ReviseItemRequest>";
+			return request;
+		}
+		
+		text1 = "<div style='-moz-user-select: none; -ms-user-select: none; -khtml-user-select: none; -webkit-user-select: none;&nbsp;-webkit-touch-callout: none;'>";
+		text2 = "</div>"
+		addNoSelected = function (description) {
+			if (description.search("-moz-user-select: none;") == -1) {
+				return text1 + description + text2;
+			}
+			else {
+				return description;
+			}
+		}
+	});
+</script>
+

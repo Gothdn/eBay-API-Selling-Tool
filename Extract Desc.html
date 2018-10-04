@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<body>
+<ng-container>
+	<div ng-app="eBay" ng-controller="myCtrl">
+		<b>Total items: {{totalItems}}</b>
+		<br>
+		<button ng-click="run(false)">Check</button>
+		<button ng-click="run(true)">Revise</button>
+		<button ng-click="makeTextFile(resultCSV)">MakeCSV</button>
+		<a download="items.csv" ng-href="{{resultFile}}">File</a>
+		<table class="table">
+			<tr>
+				<th>{{month}}</th>
+				<th>{{year}}</th>
+				<th>{{numberOfItems}}</th>
+				<th>{{numberOfWarnings}}</th>
+				<th>{{numberOfErrors}}</th>
+			</tr>
+			<tr>
+				<th>Month</th>
+				<th>Year</th>
+				<th>Items</th>
+				<th>Warning</th>
+				<th>Error</th>
+			</tr>
+			<tr ng-repeat = "res in result">
+				<th>{{res.month}}</th>
+				<th>{{res.year}}</th>
+				<th>{{res.numberOfItems}}</th>
+				<th>{{res.numberOfWarnings}}</th>
+				<th>{{res.numberOfErrors}}</th>
+			</tr>
+		</table>
+		<div id="descList"></div>
+	</div>
+	</ng-container>
+</body>
+
+<script>
+	var app = angular.module("eBay", []); 
+	app.controller("myCtrl", function($scope, $http) {
+		appId = 'PhinkNg-EbayChan-PRD-b08fef0ab-ae0ce710';
+		token = 'v^1.1#i^1#p^3#f^0#I^3#r^0#t^H4sIAAAAAAAAAOVXa2wUVRTu9oXlGUIDBDBZB40vZvfOzszO7NDduLSLVPpYdxdCi6TenbnTDp2d2czcbdmkxqYGohBjosjDhKQRITamWiREA6nWRgWJSNSEhBgJPzBKYiRBA8SI8c72wbbGlraENHF/zGbuPa/vO+fcuQd0lpY9sWvDrpsLXHMKuztBZ6HLxcwDZaUlTy4sKlxRUgDyBFzdnQ93FncV/VJhw5SelmLITpuGjdw7UrphS7nFIJWxDMmEtmZLBkwhW8KyFA/X1kg+D5DSlolN2dQpd3VVkFI5OSkLQJVlDkCVY8iqMWIzYQYpVmQFEQCVVVQEkQ+SfdvOoGrDxtDAQcoHGJEGARr4E4CXeE7iBU+A9zVS7s3IsjXTICIeQIVy4Uo5XSsv1olDhbaNLEyMUKHq8Pp4fbi6KlKXqPDm2QoN8xDHEGfssW+VpoLcm6GeQRO7sXPSUjwjy8i2KW9oyMNYo1J4JJhphJ+jmvf5Accoog/6AK8A5Z5Qud60UhBPHIezoim0mhOVkIE1nJ2MUcJGcjuS8fBbHTFRXeV2/p7NQF1TNWQFqci6cMOmeCRGuePRqGW2aQpSHKQMCAiM6GcAiTbdohmtpgcjucUwdbM5S2Ayww6HrA7TPc5jpWkomkOe7a4z8TpEokfjOeLyOCJC9Ua9FVaxE1m+nDDCJSc2OskdymYGtxhOflGKEOLOvU6eiZHSuFMM96o4GIURGcRyvMIKMMD6RovD6fUZFEjIyVE4GvU6saAkzNIpaLUinNahjGiZ0JtJIUtTJJZXfayoIlrxB1SaC6gqneQVP82oCAGEkkk5IP4f6wRjS0tmMBqtlfEbObBByuFW0qAqYbMVGYlsGlHjJXNH0XCB7LCDVAvGacnrbW9v97SzHtNq9voAYLxbamvicgtKkbN2RFabXJjWctUrI6JlaxImAQSpHaQSiXOjmQrFIutjkfiGpkT9xkjdSBWPiSw0fvU/kMZlM42ipq7J2dkFkbWUKLRwNo50nSzMCKTtgLzf8JxenxiiY8MmRmBa8zgV55HNlNeE5PRylppyUbvvRshrE5I8Q2cBseyxEFRMQ89OR3kKOprRRlrItLLTcTiqPAUdKMtmxsDTcTesOgUNNaOrmq47p8R0HOapTyVMA+pZrMn2qMsZFX44na5WZldfR51PQ10zHSE8VLZAg47GqugkIB8rFcAkDRGQkcCAGcGubdbuL2rS67FJkQui4A8wAQEAEJgRvCrUNtuyKogq5JiAj+ZEFtCcQB4BhFia3IEYP0sGEh+aWUordY100uz7Em8wbYyUmUEjV8fZBcppyZGO5GSFoQNMkqRWFkUaKipLCzxg7xbyuIW8m9e/Lt/esVNwqCD3Y7pcJ0CX6xgZpIEXPMKsBg+VFm0qLpq/wtYw8pBbmsfWmg0y3FnI04qyaahZhaWurav6epry5u7ubWD56ORdVsTMyxvDwao7OyXMomULGBEEgB/wPMcLjWD1nd1iZmlxeW2cO8T21LyRmM+dmbf/2ODTS68cAAtGhVyukoLiLldBf2/f72bP8sXJ52Ovv/Bas79QutkTvdJ0/cWlWz+qeOmaf+e+3j8f33P01Nmj3w/WN3DHufP+z/vLtjXy5/b8VX54jXDmGp67sufqH/2JdnPw1eX7fLVfvLVt0cXrD0onf33qq4NtF5Tal8/e6lp4+cDO3bsrT79y5Jmv9eM3rl58VD1Ys+XS2f6Bd/ZrJQcHGvoqvy04XVC+tnzza+8PnLrQW8SVx66e8326kv8tfGmZkekwb2c+6/Msee46z3ywhr1x4HxHx+X3Ts39Yf+7HSfbTzSwu7dvzC7sXfJdzYqPb+7FPz8QXjd46PBPaN/Jc0c+3Lvlmy8/6TwzoD4WmTvHutV9e7Fdce3Ht9f+/ebAUPr+Ab0uR2sREQAA';
+		$http.defaults.headers.common['X-EBAY-API-SITEID'] = '15';
+		$http.defaults.headers.common['X-EBAY-API-REQUEST-ENCODING'] = 'XML';
+		$http.defaults.headers.common['X-EBAY-API-COMPATIBILITY-LEVEL'] = '967';
+		$http.defaults.headers.common['X-EBAY-API-IAF-TOKEN'] = token;
+		
+		parser = new DOMParser();
+		$scope.totalItems = 0;
+		$scope.result = [];
+		$scope.revise = false;
+		const FROM_MONTH = 1;
+		const FROM_YEAR = 2012;
+		const TO_MONTH = 10;
+		const TO_YEAR = 2018;
+		$scope.resultCSV = "ItemID, Item Title, Ebay Category\n";
+		
+		month2Text = function (month) {
+			if (month < 10)
+				return "0" + month;
+			else
+				return month;
+		}
+		
+		$scope.makeTextFile = function (text) {
+			console.log("asdasdasd");
+			var textFile = null;
+			var data = new Blob([text], {type: 'text/plain'});
+
+			// If we are replacing a previously generated file we need to
+			// manually revoke the object URL to avoid memory leaks.
+			if (textFile !== null) {
+				window.URL.revokeObjectURL(textFile);
+			}
+			textFile = window.URL.createObjectURL(data);
+			
+			// returns a URL you can use as a href
+			$scope.resultFile = textFile;
+			console.log(textFile);
+			console.log(text);
+		};
+		
+		$scope.run = function (revise) {
+			$scope.month = FROM_MONTH;
+			$scope.year = FROM_YEAR;
+			$scope.revise = revise;
+			nextMonth();
+		};
+		
+		nextMonth = function () {
+			if (($scope.year == TO_YEAR) && ($scope.month == TO_MONTH))  {
+				console.log("FINISHED ALL JOB");
+				return;
+			} 
+			if ($scope.month < 12) {
+				$scope.month++;
+			} else {
+				$scope.month = 1;
+				$scope.year++;
+			}
+			
+			// '2017-03-01T06:38:48.420Z'	
+			sample = "-01T06:38:48.420Z";
+			console.log("RUNNING " + month2Text($scope.month) + "/" + $scope.year);
+			$scope.numberOfItems = 0;
+			$scope.numberOfWarnings = 0;
+			$scope.numberOfErrors = 0;
+			if ($scope.month < 12) {
+				requestSellerList($scope.year + '-' + month2Text($scope.month) + sample, $scope.year + '-' + month2Text($scope.month + 1) + sample, 1);
+			} else {
+				requestSellerList($scope.year + '-12' + sample, ($scope.year + 1) + '-01'  + sample, 1);
+			}
+		}
+		
+		requestSellerList = function (dateFrom, dateTo, pageNumber) {
+			console.log("BEGIN\ndateFrom: " + dateFrom + "\ndateTo: " + dateTo + "\npageNumber: " + pageNumber);
+			$http.defaults.headers.common['X-EBAY-API-CALL-NAME'] = 'GetSellerList';
+			url = 'https://api.ebay.com/ws/api.dll';
+			data = requestSellerListBuilder(dateFrom, dateTo, pageNumber);
+			$http.post(url, data).then(function(res) {
+				console.log(res);
+				descList = document.getElementById("descList");
+				xml = parser.parseFromString(res.data, "application/xml").childNodes[0];
+				items = xml.getElementsByTagName("Item");
+				$scope.totalItems += items.length;
+				$scope.numberOfItems += items.length;	
+				
+				for (var i=0; i < items.length; i++) {
+					item = items[i];
+					title = item.getElementsByTagName("Title")[0].childNodes[0].nodeValue.replace(/,/g, " ");
+					id = item.getElementsByTagName("ItemID")[0].childNodes[0].nodeValue;
+					category = item.getElementsByTagName("CategoryName")[0].childNodes[0].nodeValue;
+					
+					if ($scope.revise) {
+					} 
+					else {
+						descEle = document.createElement("p");
+						descEle.innerHTML = title;
+						idEle = document.createElement("h1");
+						idEle.appendChild(document.createTextNode(id + "     " + category));
+						descList.appendChild(idEle);
+						descList.appendChild(descEle);
+					}
+					$scope.resultCSV += id + ", " + title + ", " + category + "\n";
+				}
+				
+				hasMoreItems = xml.getElementsByTagName("HasMoreItems");
+				if (hasMoreItems.length > 0) {
+					//console.log("hasMoreItems", hasMoreItems[0].childNodes[0].nodeValue);
+					if (hasMoreItems[0].childNodes[0].nodeValue == "true") {
+						requestSellerList(dateFrom, dateTo, pageNumber + 1);
+					}
+					else {
+						console.log("FINISHED");
+						$scope.result.push({
+							month: $scope.month, 
+							year: $scope.year, 
+							numberOfItems: $scope.numberOfItems,
+							numberOfWarnings: $scope.numberOfWarnings,
+							numberOfErrors: $scope.numberOfErrors});
+						nextMonth();
+					}
+				}
+				else {
+					console.log("FINISHED");
+					$scope.result.push({
+						month: $scope.month, 
+						year: $scope.year, 
+						numberOfItems: $scope.numberOfItems,
+						numberOfWarnings: $scope.numberOfWarnings,
+						numberOfErrors: $scope.numberOfErrors});
+					nextMonth();
+				}
+			}, function (error) {
+				console.log(error);
+			});
+		}
+		
+		/*
+		requestReviseItem = function (itemNumber, description) {
+			$http.defaults.headers.common['X-EBAY-API-CALL-NAME'] = 'ReviseItem';
+			url = 'https://api.ebay.com/ws/api.dll';
+			data = requestReviseItemBuilder(itemNumber, description);
+			$http.post(url, data).then(function(res) {
+				xml = parser.parseFromString(res.data, "application/xml").childNodes[0];
+				ack = xml.getElementsByTagName("Ack");
+				msg = ack[0].childNodes[0].nodeValue;
+				if (msg == "Warning") {
+					$scope.numberOfWarnings++;
+					//console.log(res);
+				} else if (msg == "Error") {
+					$scope.numberOfErrors++;
+					console.log(res);
+				}
+				//console.log(res);
+			}, function (error) {
+				console.log(error);
+			});
+		};
+		*/
+		
+		requestSellerListBuilder = function (dateFrom, dateTo, pageNumber) {
+			request = "<?xml version='1.0' encoding='utf-8'?>" + "\n"
+					+ "<GetSellerListRequest xmlns='urn:ebay:apis:eBLBaseComponents'>" + "\n"
+					+ "<ErrorLanguage>en_US</ErrorLanguage>" + "\n"
+					+ "		<WarningLevel>High</WarningLevel>" + "\n"
+					+ "	  <DetailLevel>ItemReturnDescription</DetailLevel>" + "\n"
+					+ "	  <StartTimeFrom>" + dateFrom + "</StartTimeFrom>" + "\n"
+					+ "	  <StartTimeTo>" + dateTo + "</StartTimeTo>" + "\n"
+					+ "	  <Pagination>" + "\n"
+					+ "		<EntriesPerPage>40</EntriesPerPage>" + "\n"
+					+ "		<PageNumber>" + pageNumber + "</PageNumber>" + "\n"
+					+ "	  </Pagination>" + "\n"
+					+ "	 <OutputSelector>HasMoreItems</OutputSelector>" + "\n"
+					+ "  <OutputSelector>ItemId</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>CategoryName</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>Title</OutputSelector>" + "\n"
+					+ "	</GetSellerListRequest>";
+			return request;
+		}
+		
+		requestReviseItemBuilder = function (itemNumber, description) {
+			request = "<?xml version='1.0' encoding='utf-8'?>" + "\n"
+					+ "<ReviseItemRequest xmlns='urn:ebay:apis:eBLBaseComponents'>" + "\n" 
+					+ "<ErrorLanguage>en_US</ErrorLanguage>" + "\n"
+					+ "		<WarningLevel>High</WarningLevel>" + "\n"
+					+ "	  <Item>" + "\n"
+					+ "		<ItemID>" + itemNumber + "</ItemID>" + "\n"
+					+ "		<Description><![CDATA[" + description + "]]></Description>" + "\n"
+					+ "		<DescriptionReviseMode>Replace</DescriptionReviseMode>" + "\n"
+					+ "	  </Item>" + "\n"
+					+ "	</ReviseItemRequest>";
+			return request;
+		}
+	});
+	
+	app.config(['$compileProvider',
+    function ($compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
+}]);
+</script>
+

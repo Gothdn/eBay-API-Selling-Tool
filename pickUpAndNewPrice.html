@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<body>
+<ng-container>
+	<div ng-app="eBay" ng-controller="myCtrl">
+		<b>Total items: {{totalItems}}</b>
+		<br>
+		<button ng-click="run(false)">Check</button>
+		<button ng-click="run(true)">Revise</button>
+		<table class="table">
+			<tr>
+				<th>{{month}}</th>
+				<th>{{year}}</th>
+				<th>{{numberOfItems}}</th>
+				<th>{{numberOfWarnings}}</th>
+				<th>{{numberOfErrors}}</th>
+			</tr>
+			<tr>
+				<th>Month</th>
+				<th>Year</th>
+				<th>Items</th>
+				<th>Warning</th>
+				<th>Error</th>
+			</tr>
+			<tr ng-repeat = "res in result">
+				<th>{{res.month}}</th>
+				<th>{{res.year}}</th>
+				<th>{{res.numberOfItems}}</th>
+				<th>{{res.numberOfWarnings}}</th>
+				<th>{{res.numberOfErrors}}</th>
+			</tr>
+		</table>
+		<div id="descList"></div>
+	</div>
+	</ng-container>
+</body>
+
+<script>
+	var app = angular.module("eBay", []); 
+	app.controller("myCtrl", function($scope, $http) {
+		appId = 'PhinkNg-EbayChan-PRD-b08fef0ab-ae0ce710';
+		token = 'v^1.1#i^1#p^3#f^0#r^0#I^3#t^H4sIAAAAAAAAAOVXa2wUVRTutt0qAkoEURF1O2BClNm9d3d2ZmfoLlnahTal7bZbQCBI7szc6U47O7OZmW27arBWizEkagkaFX8UKQH+FEgwPngkRIPiAxJiYiJoDIkRH0Q0KgkG4p3ta1tjS1tCmrg/ZjPnntf3nXPu3As6SmY8urVy65XZrtsKezpAR6HLBWeCGSXux+4sKlzgLgB5Cq6ejsUdxZ1FF8sslNLSQgO20oZuYU97StMtIScMUxlTFwxkqZagoxS2BFsSEtGa1YLfC4S0adiGZGiUp6oiTPmDIgAilliORX5GIUJ90GWjEaaYABdkOeiXOCDJASSSdcvK4CrdspFuE3MAQzQENICNgBUgIzC8N8AGN1Cetdi0VEMnKl5ARXLZCjlbMy/VsTNFloVNmzihIlXRlYm6aFVFrLaxzJfnKzJAQ8JGdsYa+VZuyNizFmkZPHYYK6ctJDKShC2L8kX6I4x0KkQHk5lE+jmmOU7mWZHlQ1hkGVHhbwqVKw0zheyx83AkqkwrOVUB67ZqZ8djlLAhNmPJHnirJS6qKjzOX30GaaqiYjNMxVZE169JxBooTyIeN41WVcaygxQCnoMhFgKSbTqp6i2G18ZSUjc0oylLYMKBgP1eB+geFbHc0GXVIc/y1Br2Ckyyx6M5AnkcEaU6vc6MKraTWb5eaIhLuMEpbn81M3ZSd+qLU4QQT+51/EoMtsZwM9ys5gjwkFMYVgyJiMNYYoabw5n1yTdIxKlRNB73OblgEWXpFDJbsJ3WkIRpidCbSWFTlYVAUPEHQgqmZZZXaIZXFFoMyiwNFYwBxqIo8aH/Y5/YtqmKGRsP9crohRzYMOVwK6hIEWyjBeuN2TSmRmvmtqKBBmm3wlTSttOCz9fW1uZtC3gNs8nnBwD6Hq9ZnZCSOIWoIV11fGVazXWvhImVpQo2SSBMtZNOJMH1JirSEFvZEEtUbm6sq47VDnbxiMwio6X/gTQhGWkcNzRVyk4viAFTjiPTziawphHBlEBaDshbDs+Z9TEhOj4s4gSlVa/TcV7JSPkMRHYvR7Q5l7XnRpR8FiHJ278XEM9eEyPZ0LXsZIwnYKPqrWSEDDM7mYBDxhOwQZJkZHR7MuEGTCdgoWQ0RdU0Z5eYTMA884mkqSMta6uSNRRySo0fTaer5Ok113Hn01DbRMcID+VJpNPxhgpaBORjpQAk0ggDCXMQTAl2TZN6i1GTWa8fDzkX4lge8hwAgJ8SvArcOt2qyoUUxEDeTzOhAKAZjjx4jAN0gAlCNqBIkh9PraTlmkomafp9iSsNy8by1KCRo+P0AuWM5OBEMpIMaR6KpLRSKEQjWQnQXBAEbhTyKEHeyetfh2/fyEtwpCD3g52ud0Cn6xC5RwMfeAQuAqUlRWuKi2YtsFQbe8kpzWupTTq53JnY24KzaaSahSWujQsP7t+cd+3u2QTuG7p4zyiCM/Nu4WDh8Iob3nXvbBgix1gIWMgw/AawaHi1GM4vnhetX9y6/dkH5beb5gSvnVIF67WiT8HsISWXy11Q3OkqgH+Wp9q9vVvnLCt7fnHvL32/9e069uTlO+e9cCJx4Q33/u7Yvpe/27L0wpG+YMuS6ph2RDp3YAfjfm+uuWa5cEk+veR+7oc/vv1659p478bVlasub2//+1DZHdXbfz5aenhb7/65Fz878/vBs9Wl9I6NJVcOfbiOKWs+eb5jXyHXteUlQW7+eNWefa/s2lJ0O323kazb9Fzz692fLz915ew3fV+dWbFTmvvMrzV1e3f3nL745rU9x386t6r5zPXrT5O9ST+8qfLoB5f2NpY+1L3k7LYD91xd9tHSsFuNM8ffOt997NL6c6d3PTwfnpj1/bKuL9/n/vrx6u7Ui7Wf7Olp+OLV3ieS/vp3C06ue6rrgS7UX75/ANAQ5XIQEQAA';
+		$http.defaults.headers.common['X-EBAY-API-SITEID'] = '15';
+		$http.defaults.headers.common['X-EBAY-API-REQUEST-ENCODING'] = 'XML';
+		$http.defaults.headers.common['X-EBAY-API-COMPATIBILITY-LEVEL'] = '967';
+		$http.defaults.headers.common['X-EBAY-API-IAF-TOKEN'] = token;
+		
+		parser = new DOMParser();
+		$scope.totalItems = 0;
+		$scope.result = [];
+		$scope.revise = false;
+		const FROM_MONTH = 2;
+		const FROM_YEAR = 2016;
+		const TO_MONTH = 12;
+		const TO_YEAR = 2018;
+		
+		month2Text = function (month) {
+			if (month < 10)
+				return "0" + month;
+			else
+				return month;
+		}
+		
+		$scope.run = function (revise) {
+			$scope.month = FROM_MONTH;
+			$scope.year = FROM_YEAR;
+			$scope.revise = revise
+			nextMonth();
+			//requestReviseItem("321234518050", "");
+		};
+		
+		nextMonth = function () {
+			if (($scope.year == TO_YEAR) && ($scope.month == TO_MONTH))  {
+				console.log("FINISHED ALL JOB");
+				return;
+			} 
+			if ($scope.month < 12) {
+				$scope.month++;
+			} else {
+				$scope.month = 1;
+				$scope.year++;
+			}
+			
+			// '2017-03-01T06:38:48.420Z'	
+			sample = "-01T06:38:48.420Z";
+			console.log("RUNNING " + month2Text($scope.month) + "/" + $scope.year);
+			$scope.numberOfItems = 0;
+			$scope.numberOfWarnings = 0;
+			$scope.numberOfErrors = 0;
+			if ($scope.month < 12) {
+				requestSellerList($scope.year + '-' + month2Text($scope.month) + sample, $scope.year + '-' + month2Text($scope.month + 1) + sample, 1);
+			} else {
+				requestSellerList($scope.year + '-12' + sample, ($scope.year + 1) + '-01'  + sample, 1);
+			}
+		}
+		
+		requestSellerList = function (dateFrom, dateTo, pageNumber) {
+			console.log("BEGIN\ndateFrom: " + dateFrom + "\ndateTo: " + dateTo + "\npageNumber: " + pageNumber);
+			$http.defaults.headers.common['X-EBAY-API-CALL-NAME'] = 'GetSellerList';
+			url = 'https://api.ebay.com/ws/api.dll';
+			data = requestSellerListBuilder(dateFrom, dateTo, pageNumber);
+			$http.post(url, data).then(function(res) {
+				//console.log(res);
+				descList = document.getElementById("descList");
+				xml = parser.parseFromString(res.data, "application/xml").childNodes[0];
+				items = xml.getElementsByTagName("Item");
+				$scope.totalItems += items.length;
+				$scope.numberOfItems += items.length;	
+				
+				for (var i=0; i < items.length; i++) {
+					item = items[i];
+					desc = item.getElementsByTagName("Description")[0].childNodes[0].nodeValue;
+					id = item.getElementsByTagName("ItemID")[0].childNodes[0].nodeValue;
+					price = item.getElementsByTagName("CurrentPrice")[0].childNodes[0].nodeValue;
+					
+					newDesc = removePickup(desc);
+					if (newDesc == -1) {
+						modifiedDesc = desc;
+					}
+					else {
+						modifiedDesc = newDesc;
+					}
+					
+					if (modifiedDesc != -1) {
+						//	REDUCE ALL PRICE BY 15%
+						newPrice = newPriceFix(price, desc);
+						
+						if ($scope.revise) {
+							requestReviseItem(id, modifiedDesc, newPrice);
+						} 
+						else {
+							descEle = document.createElement("p");
+							descEle.innerHTML = modifiedDesc;
+							idEle = document.createElement("h1");
+							idEle.appendChild(document.createTextNode(id + "     " + price + "     " + newPrice));
+							descList.appendChild(idEle);
+							descList.appendChild(descEle);
+						}
+					}
+				}
+				
+				hasMoreItems = xml.getElementsByTagName("HasMoreItems");
+				if (hasMoreItems.length > 0) {
+					//console.log("hasMoreItems", hasMoreItems[0].childNodes[0].nodeValue);
+					if (hasMoreItems[0].childNodes[0].nodeValue == "true") {
+						requestSellerList(dateFrom, dateTo, pageNumber + 1);
+					}
+					else {
+						console.log("FINISHED");
+						$scope.result.push({
+							month: $scope.month, 
+							year: $scope.year, 
+							numberOfItems: $scope.numberOfItems,
+							numberOfWarnings: $scope.numberOfWarnings,
+							numberOfErrors: $scope.numberOfErrors});
+						nextMonth();
+					}
+				}
+				else {
+					console.log("FINISHED");
+					$scope.result.push({
+						month: $scope.month, 
+						year: $scope.year, 
+						numberOfItems: $scope.numberOfItems,
+						numberOfWarnings: $scope.numberOfWarnings,
+						numberOfErrors: $scope.numberOfErrors});
+					nextMonth();
+				}
+			}, function (error) {
+				console.log(error);
+			});
+		}
+		
+		requestReviseItem = function (itemNumber, description, price) {
+			$http.defaults.headers.common['X-EBAY-API-CALL-NAME'] = 'ReviseItem';
+			url = 'https://api.ebay.com/ws/api.dll';
+			data = requestReviseItemBuilder(itemNumber, description, price);
+			$http.post(url, data).then(function(res) {
+				xml = parser.parseFromString(res.data, "application/xml").childNodes[0];
+				ack = xml.getElementsByTagName("Ack");
+				msg = ack[0].childNodes[0].nodeValue;
+				if (msg == "Warning") {
+					$scope.numberOfWarnings++;
+					//console.log(res);
+				} else if (msg == "Error") {
+					$scope.numberOfErrors++;
+					console.log(res);
+				}
+				//console.log(res);
+			}, function (error) {
+				console.log(error);
+			});
+		};
+		
+		requestSellerListBuilder = function (dateFrom, dateTo, pageNumber) {
+			request = "<?xml version='1.0' encoding='utf-8'?>" + "\n"
+					+ "<GetSellerListRequest xmlns='urn:ebay:apis:eBLBaseComponents'>" + "\n"
+					+ "<ErrorLanguage>en_US</ErrorLanguage>" + "\n"
+					+ "		<WarningLevel>High</WarningLevel>" + "\n"
+					+ "	  <DetailLevel>ItemReturnDescription</DetailLevel>" + "\n"
+					+ "	  <StartTimeFrom>" + dateFrom + "</StartTimeFrom>" + "\n"
+					+ "	  <StartTimeTo>" + dateTo + "</StartTimeTo>" + "\n"
+					+ "	  <Pagination>" + "\n"
+					+ "		<EntriesPerPage>40</EntriesPerPage>" + "\n"
+					+ "		<PageNumber>" + pageNumber + "</PageNumber>" + "\n"
+					+ "	  </Pagination>" + "\n"
+					+ "	 <OutputSelector>HasMoreItems</OutputSelector>" + "\n"
+					+ "  <OutputSelector>ItemId</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>Description</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>PictureURL</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>SellingStatus</OutputSelector>" + "\n"
+					+ "	 <OutputSelector>ReturnedItemCountActual</OutputSelector>" + "\n"
+					+ "	</GetSellerListRequest>";
+			return request;
+		}
+		
+		requestReviseItemBuilder = function (itemNumber, description, price) {
+			request = "<?xml version='1.0' encoding='utf-8'?>" + "\n"
+					+ "<ReviseItemRequest xmlns='urn:ebay:apis:eBLBaseComponents'>" + "\n" 
+					+ "<ErrorLanguage>en_US</ErrorLanguage>" + "\n"
+					+ "		<WarningLevel>High</WarningLevel>" + "\n"
+					+ "	  <Item>" + "\n"
+					+ "		<ItemID>" + itemNumber + "</ItemID>" + "\n"
+					+ "		<Description><![CDATA[" + description + "]]></Description>" + "\n"
+					+ "		<DescriptionReviseMode>Replace</DescriptionReviseMode>" + "\n"
+					+ "     <StartPrice currencyID='AUD'>" + price + "</StartPrice>" + "\n"
+					+ "	  </Item>" + "\n"
+					+ "	</ReviseItemRequest>";
+			return request;
+		}
+		
+		text1 = "<div style='text-align: center; user-select: none; font-family: Arial;'><b style=''><font style='' size='6' color='#002cfd'><br>CASH ON PICK UP - 10% DISCOUNT<br><br></font></b></div>";
+		text2 = "CASH ON PICK UP - 10% DISCOUNT";
+		removePickup = function (description) {
+			if (description.search(text2) != -1) {
+				res = description.replace(text1, "");
+				res = description.replace(text2, "");
+				return res;
+			}
+			else {
+				return -1;
+			}
+		}
+		
+		newPriceFix = function (price, description) {
+			if (description.search(text2) == -1) {
+				return price;
+			}
+			else {
+				return Math.round(price / 1.2 * 1.05) - 0.01;
+			}
+		}
+	});
+</script>
+
