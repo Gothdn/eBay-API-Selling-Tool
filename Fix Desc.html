@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<body>
+<ng-container>
+	<div ng-app="eBay" ng-controller="myCtrl">
+		<table class="table">
+			<tr>
+				<th>
+					<textarea rows="30" cols="50" type="text" ng-model="text"></textarea>
+				</th>
+				<th>
+					<button ng-click="clear()">Clear</button>
+				</th>
+				<th>
+					<textarea rows="30" cols="50" type="text" ng-model="fixText(text)"></textarea>
+				</th>
+			</tr>
+		</table>
+	</div>
+	</ng-container>
+</body>
+
+<script>
+	var app = angular.module("eBay", []); 
+	app.controller("myCtrl", function($scope, $http) {
+		meta = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><div style=\"text-align: center; -moz-user-select: none; -ms-user-select: none; -khtml-user-select: none; -webkit-user-select: none;&nbsp;-webkit-touch-callout: none;\">";
+		end = "</div>";
+		$scope.text = '';
+		
+		$scope.repair = function () {
+			$scope.fixedText = $scope.fixText($scope.text);
+		}
+		
+		$scope.fixText = function (text) {
+			// Remove empty style
+			res = text.replace(/<div style="">/g,'');
+			
+			// Remove all html tag
+			res = res.replace(/(\&nbsp;)/g, '');
+			res = res.replace(/<\/span>/g, '<br>');
+			//res = res.replace(/<\/div>/g, '<br>');
+			//res = res.replace(/<\/p>/g, '<br>');
+			res = res.replace(/(<br>)|<[^<]*>/g, '$1');
+			
+			res = res.replace(/(<br>)(<br>)+/g,'<br><br>');
+			
+			res = res.replace(/(Pick up \/ Serviceavailable)/,'<font color="#002cfd"><br>Pick up / Service available</font>');
+			res = res.replace(/(Pick up \/ Service available)/,'<font color="#002cfd"><br>Pick up / Service available</font>');
+			
+			res = res.replace(/Fits models:/g,'<br>Fits models:');
+			
+			res = res.replace(/Series:/g,'Series:<br>');
+			res = res.replace(/series:/g,'series:<br>');
+			res = res.replace(/ :/g,': ');
+			res = res.replace(/mmPackage/g,'mm<br>Package');
+			res = res.replace(/Description:Package/g,'Description:<br>Package');
+			res = res.replace(/youaccidentallyrip/g,'you accidentally rip');
+			//res = res.replace(/Description(:){0}/g,'Description:');
+			//res = res.replace(/Compatible with(:){0}/g,'Compatible with:');
+			//res = res.replace(/BRAND NEW( ){0}/g,'BRAND NEW ');
+			
+			// Add font
+			index = res.indexOf("<br>");
+			res = '<b><font color="#ff0010" size="6" face="Arial">' + res.slice(0, index) + '</font><font size="5" face="Arial"><br>' + res.slice(index, res.length) + '</b>';
+			
+			// Add meta tag
+			res = meta + res + end;
+			return res;
+		}
+		
+		$scope.clear = function () {
+			$scope.text = '';		}
+	});
+</script>
+
