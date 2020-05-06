@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	</head>
+
+<body>
+	<div ng-app="eBay" ng-controller="myCtrl" ng-init="loadHistory()">
+		<div class="jumbotron">
+			<div class="text-center page-header"><h2>AusPost Tracking Scanner</h2></div>
+			<form name="myForm" class="form-group input-group-lg">
+				<input class="form-control"
+						name="inputBox";
+						type="text" 
+						ng-model="text" 
+						ng-change="fixText()" 
+						ng-model-options="{debounce:20}" 
+						id="inputBox" autofocus ng-blur="reFocus()"></input>
+				<br>
+				<button ng-hide="true"></button>
+				<!-- <button class="btn-info btn-lg btn-block" ng-click="copyToClipboard(text)"><b>Copy</b></button> -->
+				<button class="{{historyButton}} btn-lg btn-block" ng-click="toggleHistory()"><b>{{historyText}}</b></button>
+				<div id="table" class="list-holder" ng-hide="hiddenHistory">
+					<table class="table table-bordered table-hover table-sm">
+						<thead>
+							<th style="width:40%"><input class="form-control" type="text" ng-model="dateSearch"></th>
+							<th colspan="5"><input class="form-control" type="text" ng-model="trackSearch"></th>
+						</thead>
+						<tr ng-repeat-start="date in history | filter: {fullDate: dateSearch} | orderBy:'+':true  track by $index" 
+							ng-click="toggleDate(date)"
+							ng-hide="filtered.length==0">
+							<th style="width: 40%" rowspan="{{filtered.length + 1}}" ng-show="date.show">
+								{{date.fullDate}} ---- {{date.trackings.length}} items
+							</th>
+							<th style="width: 40%" ng-hide="date.show">
+								{{date.fullDate}}
+							</th>
+							<th colspan="3" ng-hide="date.show">
+								{{filtered.length}} items
+							</th>
+						</tr>
+						<tr ng-repeat-end ng-repeat="track in date.trackings | orderBy:'+':true | filter: {tracking: trackSearch} as filtered track by $index" ng-show="date.show" ng-click="copyToClipboard(track.tracking)">
+							<td style="width: 20%">{{track.time}}</td>
+							<td style="width: 30%">{{track.tracking}}</td>
+							<td style="width: 5%; text-align:center;" ng-hide="testShow">
+								<span class="badge badge-danger" ng-click="toggleTestShow()">
+									<span class="fa fa-trash"></span>
+								</span>
+							</td>
+							<td style="width: 5%; text-align:center;" ng-hide="testShow">
+								<span class="badge badge-secondary" ng-click="toggleTestShow()">
+									<span class="fa fa-close"></span>
+								</span>
+							</td>
+							<td style="width: 10%; text-align:center;" ng-show="testShow">
+								<span class="badge badge-danger" ng-click="toggleTestShow()">
+									<i class="fa fa-trash"></i>
+								</span>
+							</td>		
+						</tr>
+					</table>
+
+					<button class="btn-danger btn-lg btn-block" ng-click="toggleClear()" ng-hide="confirmClear">Clear History</button>
+					<div class="btn-group d-flex" ng-show="confirmClear">
+						<button class="btn btn-success btn-lg w-100" ng-click="clearHistory()">Confirm</button>
+						<button class="btn btn-danger btn-lg w-100" ng-click="cancelConfirm()">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+<style>
+	.list-holder {
+		max-height: 330px;
+		overflow-y:scroll;
+		margin-bottom: 10px;
+		-webkit-overflow-scrolling: touch;
+	}
+	.jumbotron {
+		height: 94vh;
+	}
+</style>
+
+<script>
+	var app = angular.module("eBay", []); 
+	app.controller("myCtrl", function($scope, $http) {
+		if (!Array.prototype.last){
+			Array.prototype.last = function(){
+				return this[this.length - 1];
+			};
+		};
+		$scope.TEST = false;
+		$scope.text = '';
+		$scope.oldFixedText = '';
+		$scope.historyText = "Show History";
+		$scope.historyButton = "btn-info";
+		$scope.history = [];
+		$scope.hiddenHistory = true;
+		$scope.confirmClear = false;
+		$scope.deleting = 0;
+		
+		$scope.toggleTestShow = function () {
+			$scope.testShow = !$scope.testShow;
+		}
+		
+		var showHistoryText = "Show History";
+		var hideHistoryText = "Hide History";
+		var res = '';
+		var input = document.getElementById("inputBox");
+
+		$scope.reFocus = function () {
+			if ($scope.hiddenHistory) {
+				input.focus();
+			}
+		}
+		
+		$scope.clearHistory = function () {
+			$scope.history = [];
+			$scope.saveHistory();
+			$scope.confirmClear = false;
+			$scope.toggleHistory();
+		}
+		
+		$scope.cancelConfirm = function () {
+			$scope.confirmClear = false;
+		}
+		
+		$scope.toggleClear = function () {
+			$scope.confirmClear = true;
+		}
+		
+		$scope.fixText = function () {
+			text = $scope.text.slice(res.length, $scope.text.length);
+			if (text.length == 56) {
+				console.log("one");
+				res = text.slice(18, 40);
+				$scope.addHistory(res);
+			} else if (/\D/.test(text)) {
+				if (text.indexOf("R") != -1) {
+					console.log("two one");
+					res = text.slice(18, 34);
+				} else {
+					console.log("two two");
+					res = text.slice(18, 43);
+				}
+				$scope.addHistory(res);
+			} else if (text.indexOf("9979") != -1) {
+				console.log("three");
+				res = text.slice(4, 18);
+				$scope.addHistory(res);
+			} else if (text.indexOf("997001") != -1) {
+				console.log("four");
+				res = text.slice(6, 18);
+				$scope.addHistory(res);
+			} else {
+				res = "invalid";
+			}
+			
+			$scope.myForm.inputBox.$rollbackViewValue();
+			$scope.text = res;
+			$scope.copyToClipboard(res);
+			$scope.saveHistory();
+		}
+		
+		$scope.copyToClipboard = function (res) {
+			// create temp element
+			var copyElement = document.createElement("span");
+			copyElement.appendChild(document.createTextNode(res));
+			copyElement.id = 'tempCopyToClipboard';
+			angular.element(document.body.append(copyElement));
+
+			// select the text
+			var range = document.createRange();
+			range.selectNode(copyElement);
+			window.getSelection().removeAllRanges();
+			window.getSelection().addRange(range);
+
+			// copy & cleanup
+			document.execCommand('copy');
+			window.getSelection().removeAllRanges();
+			copyElement.remove();
+		}
+		
+		$scope.addHistory = function (res) {
+			var today = new Date();
+			dd = today.getDate();
+			mm = today.getMonth() + 1;
+			yyyy = today.getFullYear();
+			date = "" + yyyy + mm + dd;
+			time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+			fullDate = "" + dd + "/" + mm + "/" + yyyy;
+			if (!$scope.history.last() || $scope.history.last().date != date) {
+				$scope.history.push({
+					date: date,
+					dd: dd,
+					mm: mm,
+					yyyy: yyyy,
+					fullDate: fullDate,
+					trackings: [],
+					lastID: 0,
+					show: false});
+			}
+			$scope.history.last().trackings.push({id: $scope.history.last().lastID++, tracking: res, time: time});
+		}
+		
+		$scope.toggleDate = function (date) {
+			date.show = !date.show;
+		}
+		
+		$scope.toggleHistory = function () {
+			if ($scope.hiddenHistory) {
+				$scope.historyButton = "btn";
+				$scope.historyText = hideHistoryText;
+				$scope.hiddenHistory = false;
+				$scope.trackSearch = "";
+				$scope.dateSearch = "";
+			} else {
+				$scope.historyButton = "btn-info";
+				$scope.historyText = showHistoryText;
+				$scope.hiddenHistory = true;
+				$scope.hideAllDates();
+				$scope.reFocus();
+			}
+		}
+		
+		$scope.saveHistory = function () {
+			if ($scope.TEST == true) {
+				return;
+			}
+			
+			saveState = {
+				history: $scope.history
+			};
+			localStorage['trackingHistory'] = JSON.stringify(saveState);
+		}
+		
+		$scope.loadHistory = function () {
+			var stored = localStorage['trackingHistory'];
+			if (stored) {
+				loadData = JSON.parse(stored);
+				$scope.history = loadData.history;
+				$scope.hideAllDates();
+			}
+			console.log($scope.history);
+		}
+		
+		$scope.hideAllDates = function () {
+			$scope.history.forEach(function(date) {
+				date.show = false;
+			});
+		}
+	});
+</script>
