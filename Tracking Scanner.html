@@ -11,7 +11,9 @@
 <body>
 	<div ng-app="eBay" ng-controller="myCtrl" ng-init="loadHistory()">
 		<div class="jumbotron">
-			<div class="text-center page-header"><h2>AusPost Tracking Scanner</h2></div>
+			<div class="text-center page-header">
+				<h2>AusPost Tracking Scanner</h2>
+			</div>
 			<form name="myForm" class="form-group input-group-lg">
 				<input class="form-control"
 						name="inputBox";
@@ -70,6 +72,10 @@
 						<button class="btn btn-danger btn-lg w-100" ng-click="cancelConfirm()">Cancel</button>
 					</div>
 				</div>
+				<span>
+					<input type="checkbox" ng-model="debugMode">
+					Debug mod (No history save on scan)
+				</span>
 			</form>
 		</div>
 	</div>
@@ -142,7 +148,7 @@
 				res = text.slice(18, 40);
 				$scope.addHistory(res);
 			} else if (/\D/.test(text)) {
-				if (text.indexOf("R") != -1) {
+				if (text.indexOf("R") != -1 && text.indexOf("RPP") == 0) {
 					console.log("two one");
 					res = text.slice(18, 34);
 				} else {
@@ -188,6 +194,9 @@
 		}
 		
 		$scope.addHistory = function (res) {
+			if ($scope.debugMode) {
+				return;
+			}
 			var today = new Date();
 			dd = today.getDate();
 			mm = today.getMonth() + 1;
@@ -230,7 +239,7 @@
 		}
 		
 		$scope.saveHistory = function () {
-			if ($scope.TEST == true) {
+			if ($scope.debug == true) {
 				return;
 			}
 			

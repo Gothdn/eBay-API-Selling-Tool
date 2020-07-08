@@ -41,11 +41,12 @@
 			res = text.replace(/<div style="">/g,'');
 			
 			// Remove all html tag
-			res = res.replace(/(\&nbsp;)/g, '');
+			res = res.replace(/<meta[^>]*>/g, '<br>');
+			res = res.replace(/<div[^>]*>/g, '<br>');
+			console.log(res);
 			res = res.replace(/<\/span>/g, '<br>');
-			//res = res.replace(/<\/div>/g, '<br>');
-			//res = res.replace(/<\/p>/g, '<br>');
 			res = res.replace(/(<br>)|<[^<]*>/g, '$1');
+			
 			
 			res = res.replace(/(<br>)(<br>)+/g,'<br><br>');
 			
@@ -60,10 +61,13 @@
 			res = res.replace(/mmPackage/g,'mm<br>Package');
 			res = res.replace(/Description:Package/g,'Description:<br>Package');
 			res = res.replace(/youaccidentallyrip/g,'you accidentally rip');
+			res = res.replace(/\s\s+/g, ' ');
+			res = res.replace(/ +</g, '<');
 			//res = res.replace(/Description(:){0}/g,'Description:');
 			//res = res.replace(/Compatible with(:){0}/g,'Compatible with:');
 			//res = res.replace(/BRAND NEW( ){0}/g,'BRAND NEW ');
-			
+			res = res.replace(/<br><br>/, '');
+			console.log(res);
 			// Add font
 			index = res.indexOf("<br>");
 			res = '<b><font color="#ff0010" size="6" face="Arial">' + res.slice(0, index) + '</font><font size="5" face="Arial"><br>' + res.slice(index, res.length) + '</b>';
